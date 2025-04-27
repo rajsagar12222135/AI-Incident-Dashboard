@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Incident Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Incident Dashboard</h1>
+    <a href="add.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add New Incident</a>
+  </div>
+
+  <select id="severityFilter" class="p-2 rounded border mb-4">
+    <option value="All">All Severities</option>
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+
+  <select id="dateSort" class="p-2 rounded border mb-4">
+    <option value="newest">Newest to Oldest</option>
+    <option value="oldest">Oldest to Newest</option>
+  </select>
+
+  <div id="incidentList" class="grid gap-6">
+  </div>
+
+  <script>
+    const incidents = [
+      { title: "Biased Recommendation", description: "Algorithm issues", severity: "Medium", reported_at: "2025-03-15" },
+      { title: "Data Leak", description: "Minor data exposure", severity: "Low", reported_at: "2025-04-01" },
+      { title: "Security Vulnerability", description: "Critical vulnerability found", severity: "High", reported_at: "2025-04-05" }
+    ];
+
+    const incidentList = document.getElementById('incidentList');
+    const severityFilter = document.getElementById('severityFilter');
+    const dateSort = document.getElementById('dateSort');
+
+    function renderIncidents() {
+      incidentList.innerHTML = '';
+      
+      let filteredIncidents = [...incidents];
+      
+      const selectedSeverity = severityFilter.value;
+      if (selectedSeverity !== 'All') {
+        filteredIncidents = filteredIncidents.filter(inc => inc.severity === selectedSeverity);
+      }
+
+      if (dateSort.value === 'newest') {
+        filteredIncidents.sort((a, b) => new Date(b.reported_at) - new Date(a.reported_at));
+      } else {
+        filteredIncidents.sort((a, b) => new Date(a.reported_at) - new Date(b.reported_at));
+      }
+
+      filteredIncidents.forEach(incident => {
+        const card = document.createElement('div');
+        card.className = 'bg-white shadow p-4 rounded';
+        card.innerHTML = `
+          <h3 class="text-xl font-semibold">${incident.title}</h3>
+          <p class="text-sm text-gray-500">Severity: ${incident.severity}</p>
+          <p class="text-sm text-gray-500">Reported At: ${incident.reported_at}</p>
+          <p class="text-sm text-gray-700">${incident.description}</p>
+        `;
+        incidentList.appendChild(card);
+      });
+    }
+
+    severityFilter.addEventListener('change', renderIncidents);
+    dateSort.addEventListener('change', renderIncidents);
+
+    renderIncidents();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Incident</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Add New Incident</h1>
+  </div>
+
+  <form id="incidentForm" class="space-y-4">
+    <input type="text" id="title" placeholder="Incident Title" class="p-2 border rounded w-full" required>
+    <textarea id="description" placeholder="Description" class="p-2 border rounded w-full" required></textarea>
+    
+    <select id="severity" class="p-2 border rounded w-full" required>
+      <option value="">Select Severity</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
+  </form>
+
+  <script>
+    const incidentForm = document.getElementById('incidentForm');
+
+    incidentForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const severity = document.getElementById('severity').value;
+
+      if (!title || !description || !severity) {
+        alert('Please fill all fields!');
+        return;
+      }
+
+      let incidents = JSON.parse(localStorage.getItem('incidents')) || [];
+      incidents.push({ title, description, severity, reported_at: new Date().toLocaleDateString() });
+      localStorage.setItem('incidents', JSON.stringify(incidents));
+
+      alert('New incident added successfully!');
+      window.location.href = 'index.html';
+    });
+  </script>
+
+</body>
+</html>
